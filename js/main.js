@@ -47,7 +47,7 @@ function drawBallCollection() {
   ballGraphics.clear();
   _.each(ballCollection.ballList, (ball) => {
     ballGraphics.lineStyle(2, ball.color);
-    ballGraphics.drawCircle(ball.x, ball.y, ball.r);
+    ballGraphics.drawCircle(ball.x, ball.y, ball.radius);
   });
   ballCollection.moveAllForward();
 }

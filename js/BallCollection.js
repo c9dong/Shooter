@@ -2,59 +2,68 @@
 
 class BallCollection {
   constructor(pathModel) {
-    this.pathModel = pathModel;
-    this.ballList = [];
-    this.ballRadius = 10;
+    this._pathModel = pathModel;
+    this._ballList = [];
+    this._ballRadius = 10;
 
-    this.addNewBall();
+    this._addNewBall();
   }
 
-  addNewBall() {
-    var ball = new Ball(0, 0, this.ballRadius);
-    ball.dist = 0;
-    this.ballList.push(ball);
-  }
-
-  removeFlaggedBalls() {
-    this.ballList = _.filter(this.ballList, (ball) => {
-      return ball.removeFlag != true;
-    });
-    this.reorderBalls();
-  }
-
-  reorderBalls() {
-    var lastBall = _.last(this.ballList);
-    if (lastBall.t > this.ballDiameter) {
-      lastBall.t -= this.ballDiameter;
-    }
-
-    for (var i=this.ballList.length-2; i>=0; i--) {
-      var ball = this.ballList[i];
-      ball.dist = lastBall.dist + this.ballDiameter;
-      console.log(ball.dist);
-      lastBall = ball;
-    }
+  /** Getter/Setter **/
+  get ballRadius() {
+    return this._ballRadius;
   }
 
   get ballDiameter() {
     return this.ballRadius*2;
   }
 
+  get ballList() {
+    return this._ballList;
+  }
+
+  /** Private methods **/
+  _addNewBall() {
+    var ball = new Ball(this.ballRadius);
+    this._ballList.push(ball);
+  }
+
+  _removeFlaggedBalls() {
+    this._ballList = _.filter(this._ballList, (ball) => {
+      return ball.removeFlag != true;
+    });
+    this._reorderBalls();
+  }
+
+  _reorderBalls() {
+    var lastBall = _.last(this._ballList);
+    if (lastBall.t > this.ballDiameter) {
+      lastBall.t -= this.ballDiameter;
+    }
+
+    for (var i=this._ballList.length-2; i>=0; i--) {
+      var ball = this._ballList[i];
+      ball.dist = lastBall.dist + this.ballDiameter;
+      lastBall = ball;
+    }
+  }
+
+  /** Public methods **/
   moveAllForward() {
-    _.each(this.ballList, (ball) => {
+    _.each(this._ballList, (ball) => {
       ball.dist = ball.dist+1;
     });
 
-    this.removeFlaggedBalls();
+    this._removeFlaggedBalls();
 
-    if (_.last(this.ballList).dist >= this.ballDiameter) {
-      this.addNewBall();
+    if (_.last(this._ballList).dist >= this.ballDiameter) {
+      this._addNewBall();
     }
   }
 
   removeBallAt(point) {
     var ballIndex = -1;
-    _.each(this.ballList, (ball, index) => {
+    _.each(this._ballList, (ball, index) => {
       if (ball.checkPointIn(point)) {
         ballIndex = index;
         return;
@@ -65,23 +74,27 @@ class BallCollection {
       return;
     }
 
-    var ballColor = this.ballList[ballIndex].color;
+    var ballColor = this._ballList[ballIndex].color;
     // Check right side
-    for (var i=ballIndex; i<this.ballList.length; i++) {
-      var ball = this.ballList[i];
+    for (var i=ballIndex; i<this._ballList.length; i++) {
+      var ball = this._ballList[i];
       if (ball.color == ballColor) {
         ball.removeFlag = true;
+      } else {
+        break;
       }
     }
 
     // Check left side
-    for (var i=ballIndex; i>=this.ballList.length; i--) {
-      var ball = this.ballList[i];
+    for (var i=ballIndex; i>=0; i--) {
+      var ball = this._ballList[i];
       if (ball.color == ballColor) {
         ball.removeFlag = true;
+      } else {
+        break;
       }
     }
 
-    this.removeFlaggedBalls();
+    this._removeFlaggedBalls();
   }
 }
