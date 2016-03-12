@@ -35,7 +35,6 @@ class PathModel {
       var p = new PIXI.Point(this.xSpline.at(i), this.ySpline.at(i));
       sampleArray.push(p);
     }
-    console.log(sampleArray);
 
     // Calc distances
     var distArray = [];
@@ -44,7 +43,7 @@ class PathModel {
     for (var i=0; i<sampleArray.length-1; i++) {
       var p1 = sampleArray[i];
       var p2 = sampleArray[i+1];
-      var dist = this.calcDist(p1, p2);
+      var dist = calcDist(p1, p2);
       totalDist += dist;
       distArray.push(totalDist);
     }
@@ -86,12 +85,5 @@ class PathModel {
       return null;
     }
     return new PIXI.Point(this.xSpline.at(dist), this.ySpline.at(dist));
-  }
-
-  /*
-   * Calculates the distance between 2 points
-  */
-  calcDist(p1, p2) {
-    return Math.sqrt(Math.pow(p1.x-p2.x,2)+Math.pow(p1.y-p2.y,2));
   }
 }

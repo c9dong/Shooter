@@ -14,12 +14,21 @@ var ballGraphics = new PIXI.Graphics();
 function init() {
   document.body.appendChild(renderer.view);
 
+  content.hitArea = new PIXI.Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+  content.interactive = true;
+  content.on("mousedown", mouseDown);
+
   initPathGraphics();
 
   // Add the graphics to the stage
   content.addChild(pathGraphics);
   content.addChild(ballGraphics);
   render();
+}
+
+function mouseDown(event) {
+  var point = event.data.getLocalPosition(event.target);
+  ballCollection.removeBallAt(point);
 }
 
 function initPathGraphics() {
